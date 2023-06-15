@@ -1,3 +1,7 @@
 from django.shortcuts import render
 
-# Create your views here.
+urlpatterns = [
+
+]
+
+app_name = "kyiv_weather"
