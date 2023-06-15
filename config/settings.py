@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "celery",
+    "django_celery_beat",
     "kyiv_weather",
 ]
 

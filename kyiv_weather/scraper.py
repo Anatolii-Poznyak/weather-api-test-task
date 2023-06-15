@@ -34,3 +34,4 @@ def save_weather(five_days_weather: list[Weather]) -> None:
 def sync_weather() -> None:
     weather = parse_weather()
     save_weather(weather)
+
