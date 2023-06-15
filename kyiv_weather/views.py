@@ -1,7 +1,10 @@
+from rest_framework.generics import ListAPIView
 from django.shortcuts import render
 
-urlpatterns = [
+from kyiv_weather.models import Weather
+from kyiv_weather.serializers import WeatherSerializer
 
-]
 
-app_name = "kyiv_weather"
+class WeatherListView(ListAPIView):
+    queryset = Weather.objects.all()
+    serializer_class = WeatherSerializer
