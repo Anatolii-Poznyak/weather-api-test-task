@@ -122,3 +122,5 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+KYIV_WEATHER_API_URL = "https://pogoda.meta.ua/ua/Kyivska/Kyivskiy/Kyiv/5/"
