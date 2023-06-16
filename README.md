@@ -61,44 +61,47 @@ python manage.py createsuperuser
 <details>
   <summary>Admin page schedule</summary>
 
-  ![login](demo/admin_schedule.png)
+  ![](demo/admin_schedule.png)
 </details>
 <details>
   <summary>Admin page weather</summary>
 
-  ![employees](demo/admin_weather.png)
+  ![](demo/admin_weather.png)
 </details>
 <details>
-  <summary>Flower</summary>
+  <summary>Weather list endpoint</summary>
 
-  ![create](demo/flower.png)
+  ![](demo/weather_list.png)
 </details>
-<details>
-  <summary>Status started</summary>
 
-  ![update](demo/status_started.png)
-</details>
 <details>
-  <summary>Pending status</summary>
+  <summary>Update endpoint</summary>
 
-  ![delete](demo/status_pending.png)
-</details>
-<details>
-  <summary>Update</summary>
-
-  ![transfer](demo/weather_update.png)
-</details>
-<details>
-  <summary>Weather list</summary>
-
-  ![logout](demo/weather_list.png)
+  ![](demo/weather_update.png)
 </details>
 <details>
   <summary>Update start</summary>
 
-  ![Fixture](demo/weather_update_start.png)
+  ![](demo/weather_update_start.png)
+</details>
+<details>
+  <summary>Pending status (status endpoint)</summary>
+
+  ![](demo/status_pending.png)
+</details>
+<details>
+  <summary>Status started</summary>
+
+  ![](demo/status_started.png)
+</details>
+
+<details>
+  <summary>Flower task monitoring</summary>
+
+  ![](demo/flower.png)
 </details>
 
 ## 📚 Additional info
 - Schedule for day-basis updating information about weather in Kyiv will be started automatically after `docker-compose up` command `python manage.py task_command`
 - You can change daily-basis time for updating information also by argument after command (exmpl: `python manage.py task_command 17` -> will change time from 9:00 to 17:00). Also you can change time from endpoint
+- Flower schedule monitoring will be able on 5555 port (127.0.0.1:5000)

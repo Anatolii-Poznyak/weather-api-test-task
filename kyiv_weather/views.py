@@ -31,8 +31,7 @@ def schedule_task(request):
 
 @api_view(["POST"])
 def weather_update(request):
-    task = update_weather.apply_async(countdown=15) # FIXME FOR TESTING
-    # task = update_weather.delay()
+    task = update_weather.delay()
     task_status_url = request.build_absolute_uri(f"/kyiv_weather/get_task_status/{task.id}/")
     return Response(
         {"task_id": task.id, "task_status_url": task_status_url, "message": "Weather update has been started !"}
