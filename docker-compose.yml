@@ -56,7 +56,7 @@ services:
       - web
       - redis
       - db
-    restart: never
+    restart: no
     env_file:
       - .env
 
