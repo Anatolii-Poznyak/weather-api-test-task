@@ -1,6 +1,7 @@
 from celery import shared_task
-from kyiv_weather.scraper import sync_weather
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
+
+from kyiv_weather.scraper import sync_weather
 
 
 @shared_task(bind=True)
@@ -10,18 +11,18 @@ def update_weather(self):
 
 
 def main_task(
-        minute="0",
-        hour="9",
-        day_of_week="*",
-        day_of_month="*",
-        month_of_year="*",
+    minute="0",
+    hour="9",
+    day_of_week="*",
+    day_of_month="*",
+    month_of_year="*",
 ):
     schedule, _ = CrontabSchedule.objects.get_or_create(
         minute=minute,
         hour=hour,
         day_of_week=day_of_week,
         day_of_month=day_of_month,
-        month_of_year=month_of_year
+        month_of_year=month_of_year,
     )
 
     task_name = "Weather daily update"
@@ -31,7 +32,7 @@ def main_task(
         defaults={
             "crontab": schedule,
             "task": "kyiv_weather.tasks.my_task_weather",
-            "args": "[]"
+            "args": "[]",
         },
     )
 

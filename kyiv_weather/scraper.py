@@ -1,4 +1,3 @@
-import time
 from datetime import date, timedelta
 
 import cloudscraper
@@ -35,4 +34,3 @@ def save_weather(five_days_weather: list[Weather]) -> None:
 def sync_weather() -> None:
     weather = parse_weather()
     save_weather(weather)
-

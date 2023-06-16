@@ -148,8 +148,8 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'weather scheduler api',
-    'DESCRIPTION': "Documentation for weather scheduler api",
-    'VERSION': '1.5.3',
-    'SERVE_INCLUDE_SCHEMA': False,
+    "TITLE": "weather scheduler api",
+    "DESCRIPTION": "Documentation for weather scheduler api",
+    "VERSION": "1.5.3",
+    "SERVE_INCLUDE_SCHEMA": False,
 }

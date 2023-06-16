@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+
 from kyiv_weather.tasks import main_task
 
 
@@ -11,7 +12,7 @@ class Command(BaseCommand):
             nargs="?",
             type=str,
             help="The hour in '24format' when the task should run",
-            default="9"
+            default="9",
         )
 
     def handle(self, *args, **options):

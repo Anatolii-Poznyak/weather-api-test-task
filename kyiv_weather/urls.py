@@ -1,6 +1,11 @@
 from django.urls import path
 
-from kyiv_weather.views import WeatherListView, schedule_task, weather_update, get_task_status
+from kyiv_weather.views import (
+    WeatherListView,
+    schedule_task,
+    weather_update,
+    get_task_status,
+)
 
 urlpatterns = [
     path("", WeatherListView.as_view(), name="weather-list"),
