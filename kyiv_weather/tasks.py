@@ -18,11 +18,22 @@ def main_task(
         month_of_year=month_of_year
     )
 
-    PeriodicTask.objects.update_or_create(
-        crontab=schedule,
-        name="Weather daily update",
+    task_name = "Weather daily update"
+
+    periodic_task, created = PeriodicTask.objects.get_or_create(
+        name=task_name,
         defaults={
+            "crontab": schedule,
             "task": "kyiv_weather.tasks.my_task_weather",
             "args": "[]"
         },
     )
+
+    if not created:
+        periodic_task.crontab = schedule
+        periodic_task.save()
+
+
+@shared_task
+def update_weather():
+    sync_weather()
