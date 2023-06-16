@@ -2,6 +2,7 @@ from celery.result import AsyncResult
 from rest_framework.decorators import api_view
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from kyiv_weather.models import Weather
 from kyiv_weather.serializers import WeatherSerializer, TaskSerializer
@@ -13,6 +14,11 @@ class WeatherListView(ListAPIView):
     serializer_class = WeatherSerializer
 
 
+@extend_schema(
+    methods=["POST"],
+    request=TaskSerializer,
+    responses={200: {"message": "string"}},
+)
 @api_view(["POST"])
 def schedule_task(request):
     serializer = TaskSerializer(data=request.data)
@@ -27,6 +33,16 @@ def schedule_task(request):
     return Response(serializer.errors, status=400)
 
 
+@extend_schema(
+    methods=["POST"],
+    responses={
+        200: {
+            "task_id": "string",
+            "task_status_url": "string",
+            "message": "string"
+        }
+    }
+)
 @api_view(["POST"])
 def weather_update(request):
     task = update_weather.delay()
@@ -42,6 +58,18 @@ def weather_update(request):
     )
 
 
+@extend_schema(
+    methods=["GET"],
+    parameters=[
+        OpenApiParameter(
+            name="task_id",
+            description="Task ID for which to get the status",
+            required=True,
+            type=str
+        )
+    ],
+    responses={200: {"task_id": "string", "status": "string"}},
+)
 @api_view(["GET"])
 def get_task_status(request, task_id):
     task = AsyncResult(task_id)
