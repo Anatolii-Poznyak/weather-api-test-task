@@ -1,3 +1,4 @@
+import time
 from datetime import date, timedelta
 
 import cloudscraper
@@ -27,6 +28,7 @@ def parse_weather() -> list[Weather]:
 
 
 def save_weather(five_days_weather: list[Weather]) -> None:
+    time.sleep(30) # FIXME FOR TESTING
     for one_day_weather in five_days_weather:
         one_day_weather.save()
 

@@ -1,6 +1,12 @@
 from celery import shared_task
-from .scraper import sync_weather
+from kyiv_weather.scraper import sync_weather
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
+
+
+@shared_task(bind=True)
+def update_weather(self):
+    sync_weather()
+    return self.request.id
 
 
 def main_task(
@@ -32,8 +38,3 @@ def main_task(
     if not created:
         periodic_task.crontab = schedule
         periodic_task.save()
-
-
-@shared_task
-def update_weather():
-    sync_weather()
