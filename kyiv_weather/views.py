@@ -9,3 +9,4 @@ from kyiv_weather.serializers import WeatherSerializer
 class WeatherListView(ListAPIView):
     queryset = Weather.objects.all()
     serializer_class = WeatherSerializer
+
