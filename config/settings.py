@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "celery",
     "django_celery_beat",
+    "drf_spectacular",
     "kyiv_weather",
 ]
 
@@ -141,3 +142,14 @@ CELERY_RESULT_BACKEND = os.environ["CELERY_RESULT_BACKEND"]
 CELERY_TIMEZONE = "Europe/Kyiv"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'weather scheduler api',
+    'DESCRIPTION': "Documentation for weather scheduler api",
+    'VERSION': '1.5.3',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
