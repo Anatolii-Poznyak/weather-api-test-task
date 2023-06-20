@@ -1,4 +1,3 @@
-version: "3.0"
 services:
   db:
     image: postgres
@@ -11,8 +10,9 @@ services:
     build: .
     command: >
       sh -c "python manage.py wait_for_db &&
-              python manage.py migrate &&
-                python manage.py runserver 0.0.0.0:8000"
+        python manage.py migrate &&
+        python manage.py runserver 0.0.0.0:8000
+      "
     volumes:
       - ./:/code
     ports:
@@ -20,7 +20,20 @@ services:
     env_file:
       - .env
     depends_on:
+      wait-for-db:
+        condition: service_completed_successfully
+
+  wait-for-db:
+    image: atkrad/wait4x
+    depends_on:
       - db
+    command: tcp db:5432 -t 150s -i 15s
+
+  wait-for-web:
+    image: atkrad/wait4x
+    depends_on:
+      - web
+    command: tcp web:8000 -t 150s -i 15s
 
   redis:
     image: "redis:alpine"
@@ -29,33 +42,39 @@ services:
     build: .
     command: "celery -A config worker -l INFO"
     depends_on:
-      - web
-      - redis
-      - db
+      wait-for-web:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "celery inspect ping --destination celery@$$HOSTNAME"]
+      interval: 10s
+      timeout: 60s
+      retries: 6
+      start_period: 10s
     restart: on-failure
     env_file:
       - .env
 
   celery_beat:
     build: .
-    command: > 
-      sh -c "python manage.py wait_for_db &&
-              celery -A config beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+    command: "celery -A config beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler"
     depends_on:
-      - web
-      - redis
-      - db
+      wait-for-web:
+        condition: service_completed_successfully
+      celery:
+        condition: service_healthy
     restart: on-failure
     env_file:
       - .env
 
   task_command:
     build: .
-    command: sh -c "python manage.py wait_for_db && python manage.py task_command"
+    command: "python manage.py task_command"
     depends_on:
       - web
       - redis
       - db
+      - celery
+      - celery_beat
     restart: no
     env_file:
       - .env
@@ -66,6 +85,7 @@ services:
       - "5555:5555"
     command: "celery -A config flower --address=0.0.0.0"
     depends_on:
-      - celery
+      celery:
+        condition: service_healthy
     env_file:
       - .env
