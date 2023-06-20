@@ -9,4 +9,7 @@ WORKDIR app/
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
+RUN groupadd -r celery && useradd -r -g celery celery
+USER celery
+
 COPY . /app/
