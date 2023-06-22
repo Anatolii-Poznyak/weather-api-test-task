@@ -2,6 +2,7 @@ from celery.result import AsyncResult
 from rest_framework.decorators import api_view
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from kyiv_weather.models import Weather
@@ -9,9 +10,15 @@ from kyiv_weather.serializers import WeatherSerializer, TaskSerializer
 from kyiv_weather.tasks import main_task, update_weather
 
 
+class WeatherPagination(PageNumberPagination):
+    page_size = 5
+    max_page_size = 25
+
+
 class WeatherListView(ListAPIView):
     queryset = Weather.objects.all()
     serializer_class = WeatherSerializer
+    pagination_class = WeatherPagination
 
 
 @extend_schema(

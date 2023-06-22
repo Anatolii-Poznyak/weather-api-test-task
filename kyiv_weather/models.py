@@ -7,10 +7,13 @@ class Weather(models.Model):
     description = models.CharField(max_length=255)
 
     def save(self, *args, **kwargs):
-        existing_weather = Weather.objects.filter(date=self.date).first()
-        if existing_weather:
-            self.pk = existing_weather.pk
-        super().save(*args, **kwargs)
+        Weather.objects.update_or_create(
+            date=self.date,
+            defaults={
+                "temperature": self.temperature,
+                'description': self.description
+            }
+        )
 
     def __str__(self):
         return f"{self.date}: {self.temperature}. {self.description}"
