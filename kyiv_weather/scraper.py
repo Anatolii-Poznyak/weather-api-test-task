@@ -8,6 +8,10 @@ from django.utils import timezone
 from config.settings import KYIV_WEATHER_API_URL
 from kyiv_weather.exceptions import NetworkError, ParsingError, DataExtractionError
 from kyiv_weather.models import Weather
+from kyiv_weather.logger import get_logger
+
+
+logger = get_logger(__name__)
 
 
 def parse_weather() -> list[Weather]:
@@ -54,5 +58,5 @@ def sync_weather() -> bool:
         save_weather(weather)
         return True
     except (NetworkError, ParsingError, DataExtractionError) as e:
-        print(str(e))
+        logger.error(str(e))
         return False
