@@ -15,14 +15,14 @@ def parse_weather() -> list[Weather]:
         scraper = cloudscraper.create_scraper()
         page = scraper.get(KYIV_WEATHER_API_URL).content
     except RequestException as e:
-        raise NetworkError(f"Network error occurred: {str(e)}")
+        raise NetworkError(original_exception=e)
 
     try:
         soup = BeautifulSoup(page, "html.parser")
         five_days = soup.select(".five-days__day.fl-col")
         start_date = timezone.now().date()
     except Exception as e:
-        raise ParsingError(f"Parsing error occurred: {str(e)}")
+        raise ParsingError(original_exception=e)
 
     try:
         return [
@@ -34,7 +34,7 @@ def parse_weather() -> list[Weather]:
             for index, day in enumerate(five_days)
         ]
     except Exception as e:
-        raise DataExtractionError(f"Data extraction error occurred: {str(e)}")
+        raise DataExtractionError(original_exception=e)
 
 
 def save_weather(five_days_weather: list[Weather]) -> None:
@@ -43,8 +43,8 @@ def save_weather(five_days_weather: list[Weather]) -> None:
             date=one_day_weather.date,
             defaults={
                 "temperature": one_day_weather.temperature,
-                "description": one_day_weather.description
-            }
+                "description": one_day_weather.description,
+            },
         )
 
 
@@ -52,9 +52,5 @@ def sync_weather() -> None:
     try:
         weather = parse_weather()
         save_weather(weather)
-    except (
-        NetworkError,
-        ParsingError,
-        DataExtractionError
-    ) as e:
+    except (NetworkError, ParsingError, DataExtractionError) as e:
         print(str(e))
