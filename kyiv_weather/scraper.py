@@ -3,7 +3,7 @@ from datetime import timedelta
 import cloudscraper
 from bs4 import BeautifulSoup
 from requests.exceptions import RequestException
-from django.utils.timezone import now
+from django.utils import timezone
 
 from config.settings import KYIV_WEATHER_API_URL
 from kyiv_weather.exceptions import NetworkError, ParsingError, DataExtractionError
@@ -20,7 +20,7 @@ def parse_weather() -> list[Weather]:
     try:
         soup = BeautifulSoup(page, "html.parser")
         five_days = soup.select(".five-days__day.fl-col")
-        start_date = now()
+        start_date = timezone.now().date()
     except Exception as e:
         raise ParsingError(f"Parsing error occurred: {str(e)}")
 
@@ -39,7 +39,13 @@ def parse_weather() -> list[Weather]:
 
 def save_weather(five_days_weather: list[Weather]) -> None:
     for one_day_weather in five_days_weather:
-        one_day_weather.save()
+        Weather.objects.update_or_create(
+            date=one_day_weather.date,
+            defaults={
+                "temperature": one_day_weather.temperature,
+                "description": one_day_weather.description
+            }
+        )
 
 
 def sync_weather() -> None:
