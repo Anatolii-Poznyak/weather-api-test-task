@@ -5,8 +5,13 @@ from kyiv_weather.scraper import sync_weather
 
 
 @shared_task(bind=True)
-def update_weather(self) -> str:
-    sync_weather()
+def update_weather(self, retries: int = 0) -> str:
+    success = sync_weather()
+    if not success:
+        if retries < 5:
+            update_weather.apply_async(args=[retries + 1], countdown=30 * 60)
+        else:
+            print("Failed to update weather after 5 attempts. Enough.")
     return self.request.id
 
 

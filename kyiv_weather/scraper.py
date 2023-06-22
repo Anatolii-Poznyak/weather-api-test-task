@@ -48,9 +48,11 @@ def save_weather(five_days_weather: list[Weather]) -> None:
         )
 
 
-def sync_weather() -> None:
+def sync_weather() -> bool:
     try:
         weather = parse_weather()
         save_weather(weather)
+        return True
     except (NetworkError, ParsingError, DataExtractionError) as e:
         print(str(e))
+        return False
