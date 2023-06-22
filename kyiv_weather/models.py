@@ -6,7 +6,7 @@ class Weather(models.Model):
     temperature = models.IntegerField()
     description = models.CharField(max_length=255)
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         Weather.objects.update_or_create(
             date=self.date,
             defaults={

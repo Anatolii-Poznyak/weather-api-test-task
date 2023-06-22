@@ -5,18 +5,18 @@ from kyiv_weather.scraper import sync_weather
 
 
 @shared_task(bind=True)
-def update_weather(self):
+def update_weather(self) -> str:
     sync_weather()
     return self.request.id
 
 
 def main_task(
-    minute="0",
-    hour="9",
-    day_of_week="*",
-    day_of_month="*",
-    month_of_year="*",
-):
+    minute: str = "0",
+    hour: str = "9",
+    day_of_week: str = "*",
+    day_of_month: str = "*",
+    month_of_year: str = "*",
+) -> None:
     schedule, _ = CrontabSchedule.objects.get_or_create(
         minute=minute,
         hour=hour,

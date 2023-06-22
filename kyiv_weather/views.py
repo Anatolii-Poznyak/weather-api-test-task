@@ -2,6 +2,7 @@ from celery.result import AsyncResult
 from rest_framework.decorators import api_view
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework.pagination import PageNumberPagination
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
@@ -27,7 +28,7 @@ class WeatherListView(ListAPIView):
     responses={200: {"message": "string"}},
 )
 @api_view(["POST"])
-def schedule_task(request):
+def schedule_task(request: Request) -> Response:
     serializer = TaskSerializer(data=request.data)
     if serializer.is_valid():
         minute = serializer.validated_data.get("minute", "0")
@@ -51,7 +52,7 @@ def schedule_task(request):
     }
 )
 @api_view(["POST"])
-def weather_update(request):
+def weather_update(request: Request) -> Response:
     task = update_weather.delay()
     task_status_url = request.build_absolute_uri(
         f"/kyiv_weather/get_task_status/{task.id}/"
@@ -78,6 +79,6 @@ def weather_update(request):
     responses={200: {"task_id": "string", "status": "string"}},
 )
 @api_view(["GET"])
-def get_task_status(request, task_id):
+def get_task_status(request: Request, task_id: str) -> Response:
     task = AsyncResult(task_id)
     return Response({"task_id": task_id, "status": task.status})
