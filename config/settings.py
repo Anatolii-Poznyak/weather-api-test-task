@@ -156,21 +156,3 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.5.3",
     "SERVE_INCLUDE_SCHEMA": False,
 }
-
-# settings.py
-
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": "debug.log",
-        },
-    },
-    "root": {
-        "handlers": ["file"],
-        "level": "DEBUG",
-    },
-}
