@@ -8,25 +8,21 @@ from django.utils import timezone
 from config.settings import KYIV_WEATHER_API_URL
 from kyiv_weather.exceptions import NetworkError, ParsingError, DataExtractionError
 from kyiv_weather.models import Weather
-from kyiv_weather.logger import get_logger
-
-
-logger = get_logger(__name__)
 
 
 def parse_weather() -> list[Weather]:
     try:
         scraper = cloudscraper.create_scraper()
         page = scraper.get(KYIV_WEATHER_API_URL).content
-    except RequestException as e:
-        raise NetworkError(original_exception=e)
+    except RequestException:
+        raise NetworkError()
 
     try:
         soup = BeautifulSoup(page, "html.parser")
         five_days = soup.select(".five-days__day.fl-col")
         start_date = timezone.now().date()
-    except Exception as e:
-        raise ParsingError(original_exception=e)
+    except Exception:
+        raise ParsingError()
 
     try:
         return [
@@ -37,8 +33,8 @@ def parse_weather() -> list[Weather]:
             )
             for index, day in enumerate(five_days)
         ]
-    except Exception as e:
-        raise DataExtractionError(original_exception=e)
+    except Exception:
+        raise DataExtractionError()
 
 
 def save_weather(five_days_weather: list[Weather]) -> None:
@@ -52,11 +48,9 @@ def save_weather(five_days_weather: list[Weather]) -> None:
         )
 
 
-def sync_weather() -> bool:
+def sync_weather() -> None:
     try:
         weather = parse_weather()
         save_weather(weather)
-        return True
     except (NetworkError, ParsingError, DataExtractionError) as e:
-        logger.error(str(e))
-        return False
+        raise e
