@@ -39,7 +39,8 @@ source venv/bin/activate
 cp .env.sample .env
 ```
 
-- If you want to use docker - set POSTGRES_HOST=db 
+- If you want to use Docker, set `POSTGRES_HOST=db` 
+- Also set your superuser credentials in `.env`
 
 ## 🐳 Run with DOCKER
 - DOCKER should be installed
@@ -48,13 +49,8 @@ cp .env.sample .env
   docker-compose up
 ```
 - server will run on 127.0.0.1:8000
-- Create superuser from terminal to be able to login (enter the container)
+- superuser will be created and loaded automatically via custom migrations 
 
-```shell
-docker ps
-docker exec -it <your container name> /bin/bash
-python manage.py createsuperuser
-```
 
 ## 🖼 Demo pictures
 
@@ -102,6 +98,8 @@ python manage.py createsuperuser
 </details>
 
 ## 📚 Additional info
+- To enter the container -> `docker compose exec web sh` or `docker exec -it <your container name> /bin/bash`
+- Containers list -> `docker ps`
 - Schedule for day-basis updating information about the weather in Kyiv will be started automatically after `docker-compose up` command (by `python manage.py task_command`)
 - You can also change the daily basis time for updating information also by adding an argument after command in terminal (example: `python manage.py task_command 17` -> will change time from 9:00 to 17:00). Also you can set this time parameter from the endpoint
 - Flower schedule monitoring will be able on 5555 port (127.0.0.1:5000)
