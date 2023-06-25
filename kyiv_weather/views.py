@@ -17,7 +17,7 @@ class WeatherPagination(PageNumberPagination):
 
 
 class WeatherListView(ListAPIView):
-    queryset = Weather.objects.all()
+    queryset = Weather.objects.order_by("date")
     serializer_class = WeatherSerializer
     pagination_class = WeatherPagination
 
