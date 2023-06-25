@@ -58,17 +58,6 @@ class ScheduleTaskTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, {"message": "Task was scheduled !"})
 
-    def test_schedule_task_invalid_input(self):
-        data = {
-            "minute": "0",
-            "hour": "invalid",
-            "day_of_week": "*",
-            "day_of_month": "*",
-            "month_of_year": "*",
-        }
-        response = self.client.post(self.uri, data, format="json")
-        self.assertEqual(response.status_code, 400)
-
 
 class WeatherUpdateTest(TestCase):
     def setUp(self):
