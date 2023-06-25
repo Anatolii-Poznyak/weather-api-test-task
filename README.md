@@ -105,7 +105,7 @@ python manage.py createsuperuser
 - Schedule for day-basis updating information about the weather in Kyiv will be started automatically after `docker-compose up` command (by `python manage.py task_command`)
 - You can also change the daily basis time for updating information also by adding an argument after command in terminal (example: `python manage.py task_command 17` -> will change time from 9:00 to 17:00). Also you can set this time parameter from the endpoint
 - Flower schedule monitoring will be able on 5555 port (127.0.0.1:5000)
-
+- Run tests `python manage.py test`
 ## 🕶 Documentation: swagger
 
 ```/api/doc/swagger/```
